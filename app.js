@@ -1,11 +1,9 @@
-const express = require("express");
 const mongoose = require("mongoose");
 const arr = require("./helper/getTable");
 const pg = require("./helper/pg.heleper");
-const { Sequelize } = require("sequelize");
 
 const getCollection = async (schemaName) => {
-  let Schema = new mongoose.Schema();
+  let Schema = new mongoose.Schema({});
   let schema = mongoose.model(schemaName, Schema);
   let collection = await schema.find();
   let array = [];
@@ -23,12 +21,11 @@ const getCollection = async (schemaName) => {
 
 const start = async () => {
   let ar = await arr();
-  let items = null;
   ar.forEach(async (item) => {
     let elem = await getCollection(item);
     pg(elem.name, elem.collection);
   });
-  let url = "test"; //копируемая база монго
+  let url = "a"; //копируемая база монго
   await mongoose.connect("mongodb://127.0.0.1:27017/" + url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

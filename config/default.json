@@ -1,0 +1,11 @@
+{
+  "mongo": "mongodb://127.0.0.1:27017/",
+  "comment_mongo": "<название базы для копирование монго>",
+  "mongoDataBase": "a",
+  "comment_pg": "<название базы postgress, заранье нужно ее создать если нету>",
+  "postgresDatabase": "clone",
+  "postgresName": "postgres",
+  "postgresPassword": "root",
+  "postgresPort": 5432,
+  "postgresHost": "localhost"
+}

@@ -1,29 +1,29 @@
 const { Sequelize, DataTypes } = require("sequelize");
-let pgURL = "mongoToPostgres"; //база postgress
-const sequelize = new Sequelize(pgURL, "postgres", "root", {
-  host: "localhost",
-  port: 5432,
-  dialect: "postgres",
-});
+const config = require("config");
+const sequelize = new Sequelize(
+  config.get("postgresDatabase"),
+  config.get("postgresName"),
+  config.get("postgresPassword"),
+  {
+    host: config.get("postgresHost"),
+    port: config.get("postgresPort"),
+    dialect: "postgres",
+  }
+);
 
 const start = async (name, array) => {
   let obj = array[0];
   let keys = new Map();
-  let str = 'new ObjectId("613be70cc1f244edea0e8846")';
-
   const getType = (i) => {
-    let type;
-    if (typeof i === "string") return DataTypes.STRING;
+    if (typeof i === "string") return DataTypes.TEXT;
     if (typeof i === "number") return DataTypes.INTEGER;
     if (typeof i === "boolean") return DataTypes.BOOLEAN;
-
-    return type;
+    if (i instanceof Date) return DataTypes.DATE;
+    if (Array.isArray(i)) return DataTypes.ARRAY;
+    return DataTypes.TEXT;
   };
   for (let key in obj) {
     if (key === "_id") {
-      let str = toString(obj[key]);
-      let str2 = str.substr(14);
-      let str3 = str2.substr(0, str2.length - 2);
       keys.set("_id", DataTypes.STRING);
     } else {
       keys.set(key, getType(obj[key]));
@@ -32,6 +32,11 @@ const start = async (name, array) => {
   const Model = sequelize.define(
     name,
     {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       ...Object.fromEntries(keys),
     },
     {
@@ -40,7 +45,8 @@ const start = async (name, array) => {
   );
   await Model.sync();
   array.forEach(async (item, i) => {
-    item._id = i;
+    let _id = `${item._id}`;
+    item._id = _id;
     await Model.create({ ...item });
   });
 };
