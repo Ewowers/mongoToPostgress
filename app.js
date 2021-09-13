@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const arr = require("./helper/getTable");
 const pg = require("./helper/pg.heleper");
-
+const config = require("config");
 const getCollection = async (schemaName) => {
   let Schema = new mongoose.Schema({});
   let schema = mongoose.model(schemaName, Schema);
@@ -25,8 +25,7 @@ const start = async () => {
     let elem = await getCollection(item);
     pg(elem.name, elem.collection);
   });
-  let url = "a"; //копируемая база монго
-  await mongoose.connect("mongodb://127.0.0.1:27017/" + url, {
+  await mongoose.connect(config.get("mongo") + config.get("mongoDataBase"), {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
