@@ -5,7 +5,7 @@
   "comment_pg": "<название базы postgress, заранье нужно ее создать если нету>",
   "postgresDatabase": "clone",
   "postgresName": "postgres",
-  "postgresPassword": "root",
+  "postgresPassword": "1",
   "postgresPort": 5432,
   "postgresHost": "localhost"
 }

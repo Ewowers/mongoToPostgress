@@ -1,15 +1,11 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const config = require("config");
-const sequelize = new Sequelize(
-  config.get("postgresDatabase"),
-  config.get("postgresName"),
-  config.get("postgresPassword"),
-  {
-    host: config.get("postgresHost"),
-    port: config.get("postgresPort"),
-    dialect: "postgres",
-  }
-);
+const sequelize = new Sequelize(config.get("postgresDatabase"), config.get("postgresName"), config.get("postgresPassword"), {
+  host: config.get("postgresHost"),
+  port: config.get("postgresPort"),
+  dialect: "postgres",
+  logging: false,
+});
 
 const start = async (name, array) => {
   let obj = array[0];
@@ -47,8 +43,10 @@ const start = async (name, array) => {
   array.forEach(async (item, i) => {
     let _id = `${item._id}`;
     item._id = _id;
-    await Model.create({ ...item });
+    let candidate = await Model.findOne({ where: { _id: _id } });
+    if (!candidate) await Model.create({ ...item });
   });
+  console.log("end");
 };
 
 module.exports = start;

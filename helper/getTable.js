@@ -14,6 +14,7 @@ let get = async () => {
   promise.finally(() => {
     client.close();
   });
+  console.log(a);
   return a;
 };
 
